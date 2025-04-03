@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+//npx prisma migrate dev --name init
 
 generator client {
   provider = "prisma-client-js"
@@ -23,6 +19,7 @@ model usuario {
   deletadoEm       DateTime?
   usuarioPermissao usuarioPermissao[]
   residencia       residencia[]
+  morador          morador[]
 }
 
 model permissao {
@@ -49,4 +46,18 @@ model residencia {
   deletadoEm DateTime?
   usuarioId  Int
   usuario    usuario   @relation(fields: [usuarioId], references: [id])
+  morador    morador[]
+}
+
+model morador {
+  id             Int        @id @default(autoincrement())
+  nome           String
+  dataNascimento DateTime
+  criadoEm       DateTime   @default(now())
+  editadoEm      DateTime   @default(now())
+  deletadoEm     DateTime?
+  residenciaId   Int
+  usuarioId      Int?
+  residencia     residencia @relation(fields: [residenciaId], references: [id])
+  usuario        usuario?   @relation(fields: [usuarioId], references: [id])
 }
