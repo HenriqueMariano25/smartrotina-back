@@ -75,7 +75,15 @@ export class ResidenciaService {
     return await this.moradorRepository.editar(moradorId, dadosDto);
   }
 
-  async deletarMorador(moradorId: number){
+  async deletarMorador(moradorId: number) {
     return await this.moradorRepository.deletar(moradorId);
+  }
+
+  async buscarPorUsuario(usuarioId: number) {
+    return await this.residenciaRepository.buscarPorUsuario(usuarioId);
+  }
+
+  async buscarPorResponsaveis(id: number) {
+    return await this.residenciaRepository.buscarPorResponsaveis(id);
   }
 }

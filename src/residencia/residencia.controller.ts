@@ -61,4 +61,14 @@ export class ResidenciaController {
   async deletarMorador(@Param() params: ParamsDto) {
     return await this.residenciaService.deletarMorador(params.id);
   }
+
+  @Get('usuario/:id')
+  async buscarPorUsuario(@Param() params: ParamsDto) {
+    return await this.residenciaService.buscarPorUsuario(params.id);
+  }
+
+  @Get(':id/responsaveis')
+  async buscarPorResponsaveis(@Param() params: ParamsDto) {
+    return await this.residenciaService.buscarPorResponsaveis(params.id);
+  }
 }

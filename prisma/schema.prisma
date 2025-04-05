@@ -10,16 +10,20 @@ datasource db {
 }
 
 model usuario {
-  id               Int                @id @default(autoincrement())
-  nome             String
-  email            String             @unique
-  senha            String
-  criadoEm         DateTime           @default(now())
-  editadoEm        DateTime           @default(now())
-  deletadoEm       DateTime?
-  usuarioPermissao usuarioPermissao[]
-  residencia       residencia[]
-  morador          morador[]
+  id                       Int                @id @default(autoincrement())
+  nome                     String
+  email                    String             @unique
+  senha                    String
+  criadoEm                 DateTime           @default(now())
+  editadoEm                DateTime           @default(now())
+  deletadoEm               DateTime?
+  usuarioPermissao         usuarioPermissao[]
+  residencia               residencia[]
+  morador                  morador[]
+  tipoProduto              tipoProduto[]
+  produto                  produto[]
+  listaProdutosUsuario     listaProdutos[]    @relation("listaProdutos_usuario")
+  listaProdutosResponsavel listaProdutos[]    @relation("listaProdutos_responsavel")
 }
 
 model permissao {
@@ -38,15 +42,16 @@ model usuarioPermissao {
 }
 
 model residencia {
-  id         Int       @id @default(autoincrement())
-  nome       String
-  ehFavorito Boolean   @default(false)
-  criadoEm   DateTime  @default(now())
-  editadoEm  DateTime  @default(now())
-  deletadoEm DateTime?
-  usuarioId  Int
-  usuario    usuario   @relation(fields: [usuarioId], references: [id])
-  morador    morador[]
+  id            Int             @id @default(autoincrement())
+  nome          String
+  ehFavorito    Boolean         @default(false)
+  criadoEm      DateTime        @default(now())
+  editadoEm     DateTime        @default(now())
+  deletadoEm    DateTime?
+  usuarioId     Int
+  usuario       usuario         @relation(fields: [usuarioId], references: [id])
+  morador       morador[]
+  listaProdutos listaProdutos[]
 }
 
 model morador {
@@ -60,4 +65,39 @@ model morador {
   usuarioId      Int?
   residencia     residencia @relation(fields: [residenciaId], references: [id])
   usuario        usuario?   @relation(fields: [usuarioId], references: [id])
+}
+
+model listaProdutos {
+  id            Int         @id @default(autoincrement())
+  nome          String
+  observacao    String?
+  residenciaId  Int?
+  responsavelId Int?
+  usuarioId     Int
+  residencia    residencia? @relation(fields: [residenciaId], references: [id])
+  responsavel   usuario?    @relation("listaProdutos_responsavel", fields: [responsavelId], references: [id])
+  produto       produto[]
+  usuario       usuario     @relation("listaProdutos_usuario", fields: [usuarioId], references: [id])
+}
+
+model tipoProduto {
+  id        Int       @id @default(autoincrement())
+  descricao String
+  usuarioId Int
+  usuario   usuario   @relation(fields: [usuarioId], references: [id])
+  produto   produto[]
+}
+
+model produto {
+  id              Int           @id @default(autoincrement())
+  nome            String
+  quantidade      Int
+  unidade         String
+  observacao      String?
+  tipoProdutoId   Int
+  listaProdutosId Int
+  usuarioId       Int
+  tipoProduto     tipoProduto   @relation(fields: [tipoProdutoId], references: [id])
+  listaProdutos   listaProdutos @relation(fields: [listaProdutosId], references: [id])
+  usuario         usuario       @relation(fields: [usuarioId], references: [id])
 }

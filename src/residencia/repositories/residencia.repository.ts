@@ -23,4 +23,24 @@ export class ResidenciaRepository {
       },
     });
   }
+
+  async buscarPorUsuario(usuarioId: number) {
+    return this.prisma.residencia.findMany({
+      where: {
+        OR: [
+          {
+            morador: {
+              some: { usuarioId },
+            },
+          },
+          { usuarioId },
+        ],
+        deletadoEm: null,
+      },
+    });
+  }
+
+  async buscarPorResponsaveis(id: number) {
+    return this.prisma.morador.findMany({ where: { residenciaId: id, NOT: { usuarioId: null } } });
+  }
 }
