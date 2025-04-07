@@ -59,7 +59,7 @@ model morador {
   nome           String
   dataNascimento DateTime
   criadoEm       DateTime   @default(now())
-  editadoEm      DateTime   @default(now())
+  editadoEm      DateTime   @updatedAt
   deletadoEm     DateTime?
   residenciaId   Int
   usuarioId      Int?
@@ -94,10 +94,10 @@ model produto {
   quantidade      Int
   unidade         String
   observacao      String?
-  tipoProdutoId   Int
+  tipoProdutoId   Int?
   listaProdutosId Int
   usuarioId       Int
-  tipoProduto     tipoProduto   @relation(fields: [tipoProdutoId], references: [id])
+  tipoProduto     tipoProduto?  @relation(fields: [tipoProdutoId], references: [id], onDelete: SetNull)
   listaProdutos   listaProdutos @relation(fields: [listaProdutosId], references: [id])
   usuario         usuario       @relation(fields: [usuarioId], references: [id])
 }

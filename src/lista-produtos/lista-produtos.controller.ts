@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -15,6 +16,9 @@ import { UserRequestDto } from '../common/dto/userRequest.dto';
 import { ListaProdutosService } from './lista-produtos.service';
 import { ParamsDto } from '../common/dto/params.dto';
 import { EditarListaProdutosControllerDto } from './dto/controller/editar-lista-produtos.controller.dto';
+import { CadastrarProdutoControllerDto } from './dto/controller/cadastrar-produto.controller.dto';
+import { CadastrarTipoProdutoControllerDto } from './dto/controller/cadastrar-tipo-produto.controller.dto';
+import { EditarTipoProdutoControllerDto } from './dto/controller/editar-tipo-produto.controller.dto';
 
 @ApiTags('lista-produtos')
 @UseGuards(AuthGuard('jwt'))
@@ -46,5 +50,52 @@ export class ListaProdutosController {
     @Body() dadosDto: EditarListaProdutosControllerDto,
   ) {
     return await this.listaProdutosService.editar(params.id, dadosDto);
+  }
+
+  @Post(':id/produto')
+  async cadastrarProduto(
+    @Req() { user: usuario }: UserRequestDto,
+    @Param() params: ParamsDto,
+    @Body() dadosDto: CadastrarProdutoControllerDto,
+  ) {
+    return await this.listaProdutosService.cadastrarProduto(
+      usuario.id,
+      params.id,
+      dadosDto,
+    );
+  }
+
+  @Post('tipo-produto')
+  async cadastrarTipoProduto(
+    @Req() { user: usuario }: UserRequestDto,
+    @Body() dadosDto: CadastrarTipoProdutoControllerDto,
+  ) {
+    return await this.listaProdutosService.cadastrarTipoProduto(
+      usuario.id,
+      dadosDto,
+    );
+  }
+
+  @Get('tipo-produto/usuario')
+  async buscarTipoProdutoPorUsuario(@Req() { user: usuario }: UserRequestDto) {
+    return await this.listaProdutosService.buscarTipoProdutoProUsuario(
+      usuario.id,
+    );
+  }
+
+  @Put('tipo-produto/:id')
+  async editarTipoProduto(
+    @Param() params: ParamsDto,
+    @Body() dadosDto: EditarTipoProdutoControllerDto,
+  ) {
+    return await this.listaProdutosService.editarTipoProduto(
+      params.id,
+      dadosDto,
+    );
+  }
+
+  @Delete('tipo-produto/:id')
+  async deletarTipoProduto(@Param() params: ParamsDto) {
+    return await this.listaProdutosService.deletarTipoProduto(params.id);
   }
 }
