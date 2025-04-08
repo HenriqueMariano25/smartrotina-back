@@ -9,4 +9,8 @@ export class ProdutoRepository {
   async cadastrar(data: CadastrarProdutoRepositoryDto) {
     return await this.prisma.produto.create({ data });
   }
+
+  async buscarPorListaProdutos(listaProdutosId: number) {
+    return await this.prisma.produto.findMany({ where: { listaProdutosId } });
+  }
 }

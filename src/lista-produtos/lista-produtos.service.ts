@@ -60,6 +60,10 @@ export class ListaProdutosService {
     return await this.produtoRepository.cadastrar(dados);
   }
 
+  async buscarProdutosPorListaProdutos(listaProdutosId: number) {
+    return await this.produtoRepository.buscarPorListaProdutos(listaProdutosId);
+  }
+
   async cadastrarTipoProduto(
     usuarioId: number,
     dadosDto: CadastrarTipoProdutoControllerDto,

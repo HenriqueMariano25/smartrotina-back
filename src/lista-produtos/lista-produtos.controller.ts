@@ -65,6 +65,13 @@ export class ListaProdutosController {
     );
   }
 
+  @Get(':id/produtos')
+  async buscarProdutosPorListaProdutos(@Param() params: ParamsDto) {
+    return await this.listaProdutosService.buscarProdutosPorListaProdutos(
+      params.id,
+    );
+  }
+
   @Post('tipo-produto')
   async cadastrarTipoProduto(
     @Req() { user: usuario }: UserRequestDto,
