@@ -6,7 +6,8 @@ import {
   Req,
   UseGuards,
   Param,
-  Put, Delete,
+  Put,
+  Delete,
 } from '@nestjs/common';
 import { ResidenciaService } from './residencia.service';
 import { CadastrarResidenciaControllerDto } from './dto/controller/cadastrar-residencia.controller.dto';
