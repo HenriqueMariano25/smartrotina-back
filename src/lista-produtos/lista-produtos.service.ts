@@ -73,6 +73,10 @@ export class ListaProdutosService {
     return await this.produtoRepository.editar(id, dadoDto);
   }
 
+  async editarValorProduto(id: number, valor: number) {
+    return await this.produtoRepository.editarValor(id, valor);
+  }
+
   async cadastrarTipoProduto(
     usuarioId: number,
     dadosDto: CadastrarTipoProdutoControllerDto,

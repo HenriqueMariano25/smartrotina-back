@@ -25,4 +25,8 @@ export class ProdutoRepository {
   async editar(id: number, data: EditarProdutoRepositoryDto) {
     return await this.prisma.produto.update({ where: { id }, data });
   }
+
+  async editarValor(id: number, valor: number) {
+    return await this.prisma.produto.update({ where: { id }, data: { valor } });
+  }
 }
