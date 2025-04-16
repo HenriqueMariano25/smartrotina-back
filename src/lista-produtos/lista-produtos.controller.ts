@@ -19,6 +19,7 @@ import { EditarListaProdutosControllerDto } from './dto/controller/editar-lista-
 import { CadastrarProdutoControllerDto } from './dto/controller/cadastrar-produto.controller.dto';
 import { CadastrarTipoProdutoControllerDto } from './dto/controller/cadastrar-tipo-produto.controller.dto';
 import { EditarTipoProdutoControllerDto } from './dto/controller/editar-tipo-produto.controller.dto';
+import { EditarProdutoControllerDto } from './dto/controller/editar-produto.controller.dto';
 
 @ApiTags('lista-produtos')
 @UseGuards(AuthGuard('jwt'))
@@ -70,6 +71,19 @@ export class ListaProdutosController {
     return await this.listaProdutosService.buscarProdutosPorListaProdutos(
       params.id,
     );
+  }
+
+  @Get('/produto/:id')
+  async buscarUmProduto(@Param() params: ParamsDto) {
+    return await this.listaProdutosService.buscarUmProduto(params.id);
+  }
+
+  @Put('/produto/:id')
+  async editarProduto(
+    @Param() params: ParamsDto,
+    @Body() dadosDto: EditarProdutoControllerDto,
+  ) {
+    return await this.listaProdutosService.editarProduto(params.id, dadosDto);
   }
 
   @Post('tipo-produto')

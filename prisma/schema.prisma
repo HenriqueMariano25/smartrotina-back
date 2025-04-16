@@ -97,6 +97,8 @@ model produto {
   quantidade      Int
   unidade         String
   observacao      String?
+  valor           Float?
+  selecionado     Boolean       @default(false)
   tipoProdutoId   Int?
   listaProdutosId Int
   usuarioId       Int

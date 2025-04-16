@@ -6,4 +6,5 @@ export class CadastrarProdutoRepositoryDto {
   tipoProdutoId: number;
   listaProdutosId: number;
   usuarioId: number;
+  valor?: number;
 }

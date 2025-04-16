@@ -20,4 +20,8 @@ export class CadastrarProdutoControllerDto {
   @IsNumber()
   @IsNotEmpty()
   tipoProdutoId: number;
+
+  @IsNumber()
+  @IsOptional()
+  valor?: number
 }

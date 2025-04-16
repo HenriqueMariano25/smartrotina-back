@@ -11,6 +11,7 @@ import { CadastrarTipoProdutoControllerDto } from './dto/controller/cadastrar-ti
 import { CadastrarTipoProdutoRepositoryDto } from './dto/repository/cadastrar-tipo-produto.repository.dto';
 import { TipoProdutoRepository } from './repositories/tipoProduto.repository';
 import { EditarTipoProdutoControllerDto } from './dto/controller/editar-tipo-produto.controller.dto';
+import { EditarProdutoControllerDto } from './dto/controller/editar-produto.controller.dto';
 
 @Injectable()
 export class ListaProdutosService {
@@ -62,6 +63,14 @@ export class ListaProdutosService {
 
   async buscarProdutosPorListaProdutos(listaProdutosId: number) {
     return await this.produtoRepository.buscarPorListaProdutos(listaProdutosId);
+  }
+
+  async buscarUmProduto(id: number) {
+    return await this.produtoRepository.buscarUm(id);
+  }
+
+  async editarProduto(id: number, dadoDto: EditarProdutoControllerDto) {
+    return await this.produtoRepository.editar(id, dadoDto);
   }
 
   async cadastrarTipoProduto(
