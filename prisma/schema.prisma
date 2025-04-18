@@ -71,16 +71,16 @@ model morador {
 }
 
 model listaProdutos {
-  id            Int         @id @default(autoincrement())
-  nome          String
-  observacao    String?
-  residenciaId  Int?
-  responsavelId Int?
-  usuarioId     Int
-  residencia    residencia? @relation(fields: [residenciaId], references: [id])
-  responsavel   usuario?    @relation("listaProdutos_responsavel", fields: [responsavelId], references: [id])
-  produto       produto[]
-  usuario       usuario     @relation("listaProdutos_usuario", fields: [usuarioId], references: [id])
+  id                  Int                   @id @default(autoincrement())
+  nome                String
+  observacao          String?
+  residenciaId        Int?
+  responsavelId       Int?
+  usuarioId           Int
+  residencia          residencia?           @relation(fields: [residenciaId], references: [id])
+  responsavel         usuario?              @relation("listaProdutos_responsavel", fields: [responsavelId], references: [id])
+  usuario             usuario               @relation("listaProdutos_usuario", fields: [usuarioId], references: [id])
+  produtoListaProduto produtoListaProduto[]
 }
 
 model tipoProduto {
@@ -92,19 +92,34 @@ model tipoProduto {
 }
 
 model produto {
-  id              Int           @id @default(autoincrement())
-  nome            String
-  quantidade      Int
-  unidade         String
-  observacao      String?
-  valor           Float?
-  selecionado     Boolean       @default(false)
-  tipoProdutoId   Int?
-  listaProdutosId Int
-  usuarioId       Int
-  tipoProduto     tipoProduto?  @relation(fields: [tipoProdutoId], references: [id], onDelete: SetNull)
-  listaProdutos   listaProdutos @relation(fields: [listaProdutosId], references: [id])
-  usuario         usuario       @relation(fields: [usuarioId], references: [id])
+  id                  Int                   @id @default(autoincrement())
+  nome                String
+  observacao          String?
+  tipoProdutoId       Int?
+  usuarioId           Int
+  tipoProduto         tipoProduto?          @relation(fields: [tipoProdutoId], references: [id], onDelete: SetNull)
+  usuario             usuario               @relation(fields: [usuarioId], references: [id])
+  criadoEm            DateTime              @default(now())
+  produtoListaProduto produtoListaProduto[]
+}
+
+model statusProdutoLista {
+  id                  Int                   @id @default(autoincrement())
+  descricao           String
+  produtoListaProduto produtoListaProduto[]
+}
+
+model produtoListaProduto {
+  id                   Int                @id @default(autoincrement())
+  quantidade           Int
+  unidade              String
+  valor                Float?
+  produtoId            Int
+  listaProdutosId      Int?
+  statusProdutoListaId Int
+  statusProdutoLista   statusProdutoLista @relation(fields: [statusProdutoListaId], references: [id])
+  produto              produto            @relation(fields: [produtoId], references: [id])
+  listaProduto         listaProdutos?     @relation(fields: [listaProdutosId], references: [id])
 }
 
 model rotina {
@@ -128,3 +143,7 @@ model rotina {
   residencia    residencia? @relation(fields: [residenciaId], references: [id])
   usuario       usuario     @relation("rotina_usuario", fields: [usuarioId], references: [id])
 }
+
+// model statusProdutoListaProduto {
+//
+// }

@@ -4,21 +4,25 @@ import { CadastrarListaProdutosControllerDto } from './dto/controller/cadastrar-
 import { CadastrarResidenciaRepositoryDto } from '../residencia/dto/repository/cadastrar-residencia.repository.dto';
 import { EditarListaProdutosRepositoryDto } from './dto/repository/editar-lista-produtos.repository.dto';
 import { EditarListaProdutosControllerDto } from './dto/controller/editar-lista-produtos.controller.dto';
-import { ProdutoRepository } from './repositories/produto.repository';
-import { CadastrarProdutoControllerDto } from './dto/controller/cadastrar-produto.controller.dto';
-import { CadastrarProdutoRepositoryDto } from './dto/repository/cadastrar-produto.repository.dto';
+import { CadastrarProdutoControllerDto } from '../produto/dto/controller/cadastrar-produto.controller.dto';
+import { CadastrarProdutoRepositoryDto } from '../produto/dto/repository/cadastrar-produto.repository.dto';
 import { CadastrarTipoProdutoControllerDto } from './dto/controller/cadastrar-tipo-produto.controller.dto';
 import { CadastrarTipoProdutoRepositoryDto } from './dto/repository/cadastrar-tipo-produto.repository.dto';
 import { TipoProdutoRepository } from './repositories/tipoProduto.repository';
 import { EditarTipoProdutoControllerDto } from './dto/controller/editar-tipo-produto.controller.dto';
 import { EditarProdutoControllerDto } from './dto/controller/editar-produto.controller.dto';
+import { ProdutoService } from '../produto/produto.service';
+import { ProdutoListaProdutoRepository } from './repositories/produtoListaProduto.repository';
+import { CadastrarProdutoListaProdutoRepositoryDto } from './dto/repository/cadastrar-produto-lista-produto.repository.dto';
+import { AdicionarProdutoListaControllerDto } from './dto/controller/adicionar-produto-lista.controller.dto';
 
 @Injectable()
 export class ListaProdutosService {
   constructor(
     private readonly listaProdutosRepository: ListaProdutosRepository,
-    private readonly produtoRepository: ProdutoRepository,
     private readonly tipoProdutoRepository: TipoProdutoRepository,
+    private readonly produtoService: ProdutoService,
+    private readonly produtoListaProdutoRepository: ProdutoListaProdutoRepository,
   ) {}
 
   async cadastrar(
@@ -47,35 +51,69 @@ export class ListaProdutosService {
     return this.buscarUm(id);
   }
 
-  async cadastrarProduto(
+  async adicionarProdutoLista(
     usuarioId: number,
     listaProdutosId: number,
-    dadosDto: CadastrarProdutoControllerDto,
+    dadosDto: AdicionarProdutoListaControllerDto,
   ) {
-    const dados: CadastrarProdutoRepositoryDto = {
-      ...dadosDto,
+    const produtoEncontrado = await this.produtoService.buscarUmPorNome(
+      dadosDto.nome,
       usuarioId,
-      listaProdutosId,
-    };
+    );
 
-    return await this.produtoRepository.cadastrar(dados);
+    let produtoId: number | null = null;
+    if (!produtoEncontrado) {
+      const dadosCadastrarProdutos: CadastrarProdutoControllerDto = {
+        nome: dadosDto.nome,
+        tipoProdutoId: dadosDto.tipoProdutoId,
+        observacao: dadosDto.observacao,
+      };
+
+      const produtoCadastrado = await this.produtoService.cadastrar(
+        usuarioId,
+        dadosCadastrarProdutos,
+      );
+      produtoId = produtoCadastrado.id;
+    } else {
+      produtoId = produtoEncontrado.id;
+    }
+
+    const dadosPrCadastrarProdutoLista: CadastrarProdutoListaProdutoRepositoryDto =
+      {
+        produtoId,
+        listaProdutosId,
+        valor: dadosDto.valor,
+        quantidade: dadosDto.quantidade,
+        unidade: dadosDto.unidade,
+      };
+
+    const produtoListaCriado =
+      await this.produtoListaProdutoRepository.cadastrar(
+        dadosPrCadastrarProdutoLista,
+      );
+
+    // const itemCriad
+
+    return await this.produtoListaProdutoRepository.buscarUm(
+      produtoListaCriado.id,
+    );
   }
 
-  async buscarProdutosPorListaProdutos(listaProdutosId: number) {
-    return await this.produtoRepository.buscarPorListaProdutos(listaProdutosId);
-  }
-
-  async buscarUmProduto(id: number) {
-    return await this.produtoRepository.buscarUm(id);
-  }
-
-  async editarProduto(id: number, dadoDto: EditarProdutoControllerDto) {
-    return await this.produtoRepository.editar(id, dadoDto);
-  }
-
-  async editarValorProduto(id: number, valor: number) {
-    return await this.produtoRepository.editarValor(id, valor);
-  }
+  // async buscarProdutosPorListaProdutos(listaProdutosId: number) {
+  //   return await this.produtoRepository.buscarPorListaProdutos(listaProdutosId);
+  // }
+  //
+  // async buscarUmProduto(id: number) {
+  //   return await this.produtoRepository.buscarUm(id);
+  // }
+  //
+  // async editarProduto(id: number, dadoDto: EditarProdutoControllerDto) {
+  //   return await this.produtoRepository.editar(id, dadoDto);
+  // }
+  //
+  // async editarValorProduto(id: number, valor: number) {
+  //   return await this.produtoRepository.editarValor(id, valor);
+  // }
 
   async cadastrarTipoProduto(
     usuarioId: number,

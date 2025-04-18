@@ -16,11 +16,12 @@ import { UserRequestDto } from '../common/dto/userRequest.dto';
 import { ListaProdutosService } from './lista-produtos.service';
 import { ParamsDto } from '../common/dto/params.dto';
 import { EditarListaProdutosControllerDto } from './dto/controller/editar-lista-produtos.controller.dto';
-import { CadastrarProdutoControllerDto } from './dto/controller/cadastrar-produto.controller.dto';
+import { CadastrarProdutoControllerDto } from '../produto/dto/controller/cadastrar-produto.controller.dto';
 import { CadastrarTipoProdutoControllerDto } from './dto/controller/cadastrar-tipo-produto.controller.dto';
 import { EditarTipoProdutoControllerDto } from './dto/controller/editar-tipo-produto.controller.dto';
 import { EditarProdutoControllerDto } from './dto/controller/editar-produto.controller.dto';
 import { EditarValorProdutoControllerDto } from './dto/controller/editar-valor-produto.controller.dto';
+import { AdicionarProdutoListaControllerDto } from './dto/controller/adicionar-produto-lista.controller.dto';
 
 @ApiTags('lista-produtos')
 @UseGuards(AuthGuard('jwt'))
@@ -54,49 +55,49 @@ export class ListaProdutosController {
     return await this.listaProdutosService.editar(params.id, dadosDto);
   }
 
-  @Post(':id/produto')
-  async cadastrarProduto(
+  @Post(':id/produto/adicionar')
+  async adicionarProduto(
     @Req() { user: usuario }: UserRequestDto,
     @Param() params: ParamsDto,
-    @Body() dadosDto: CadastrarProdutoControllerDto,
+    @Body() dadosDto: AdicionarProdutoListaControllerDto,
   ) {
-    return await this.listaProdutosService.cadastrarProduto(
+    return await this.listaProdutosService.adicionarProdutoLista(
       usuario.id,
       params.id,
       dadosDto,
     );
   }
 
-  @Get(':id/produtos')
-  async buscarProdutosPorListaProdutos(@Param() params: ParamsDto) {
-    return await this.listaProdutosService.buscarProdutosPorListaProdutos(
-      params.id,
-    );
-  }
+  // @Get(':id/produtos')
+  // async buscarProdutosPorListaProdutos(@Param() params: ParamsDto) {
+  //   return await this.listaProdutosService.buscarProdutosPorListaProdutos(
+  //     params.id,
+  //   );
+  // }
 
-  @Get('/produto/:id')
-  async buscarUmProduto(@Param() params: ParamsDto) {
-    return await this.listaProdutosService.buscarUmProduto(params.id);
-  }
+  // @Get('/produto/:id')
+  // async buscarUmProduto(@Param() params: ParamsDto) {
+  //   return await this.listaProdutosService.buscarUmProduto(params.id);
+  // }
 
-  @Put('/produto/:id')
-  async editarProduto(
-    @Param() params: ParamsDto,
-    @Body() dadosDto: EditarProdutoControllerDto,
-  ) {
-    return await this.listaProdutosService.editarProduto(params.id, dadosDto);
-  }
+  // @Put('/produto/:id')
+  // async editarProduto(
+  //   @Param() params: ParamsDto,
+  //   @Body() dadosDto: EditarProdutoControllerDto,
+  // ) {
+  //   return await this.listaProdutosService.editarProduto(params.id, dadosDto);
+  // }
 
-  @Put('/produto/:id/valor')
-  async editarValorProduto(
-    @Param() params: ParamsDto,
-    @Body() dadosDto: EditarValorProdutoControllerDto,
-  ) {
-    return await this.listaProdutosService.editarValorProduto(
-      params.id,
-      dadosDto.valor,
-    );
-  }
+  // @Put('/produto/:id/valor')
+  // async editarValorProduto(
+  //   @Param() params: ParamsDto,
+  //   @Body() dadosDto: EditarValorProdutoControllerDto,
+  // ) {
+  //   return await this.listaProdutosService.editarValorProduto(
+  //     params.id,
+  //     dadosDto.valor,
+  //   );
+  // }
 
   @Post('tipo-produto')
   async cadastrarTipoProduto(

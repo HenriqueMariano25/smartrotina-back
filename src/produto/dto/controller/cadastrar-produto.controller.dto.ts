@@ -5,14 +5,6 @@ export class CadastrarProdutoControllerDto {
   @IsNotEmpty()
   nome: string;
 
-  @IsNumber()
-  @IsNotEmpty()
-  quantidade: number;
-
-  @IsString()
-  @IsNotEmpty()
-  unidade: string;
-
   @IsString()
   @IsOptional()
   observacao?: string;
@@ -20,8 +12,4 @@ export class CadastrarProdutoControllerDto {
   @IsNumber()
   @IsNotEmpty()
   tipoProdutoId: number;
-
-  @IsNumber()
-  @IsOptional()
-  valor?: number
 }
