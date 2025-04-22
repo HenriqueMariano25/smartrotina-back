@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ListaProdutosRepository } from './repositories/listaProdutos.repository';
 import { CadastrarListaProdutosControllerDto } from './dto/controller/cadastrar-lista-produtos.controller.dto';
 import { CadastrarResidenciaRepositoryDto } from '../residencia/dto/repository/cadastrar-residencia.repository.dto';
@@ -10,11 +10,13 @@ import { CadastrarTipoProdutoControllerDto } from './dto/controller/cadastrar-ti
 import { CadastrarTipoProdutoRepositoryDto } from './dto/repository/cadastrar-tipo-produto.repository.dto';
 import { TipoProdutoRepository } from './repositories/tipoProduto.repository';
 import { EditarTipoProdutoControllerDto } from './dto/controller/editar-tipo-produto.controller.dto';
-import { EditarProdutoControllerDto } from './dto/controller/editar-produto.controller.dto';
 import { ProdutoService } from '../produto/produto.service';
 import { ProdutoListaProdutoRepository } from './repositories/produtoListaProduto.repository';
 import { CadastrarProdutoListaProdutoRepositoryDto } from './dto/repository/cadastrar-produto-lista-produto.repository.dto';
 import { AdicionarProdutoListaControllerDto } from './dto/controller/adicionar-produto-lista.controller.dto';
+import { EditarProdutoListaControllerDto } from './dto/controller/editar-produto-lista.controller.dto';
+import { EditarProdutoControllerDto } from '../produto/dto/controller/editar-produto.controller.dto';
+import { EditarProdutoListaProdutoRepositoryDto } from './dto/repository/editar-produto-lista-produto.repository.dto';
 
 @Injectable()
 export class ListaProdutosService {
@@ -99,9 +101,60 @@ export class ListaProdutosService {
     );
   }
 
-  // async buscarProdutosPorListaProdutos(listaProdutosId: number) {
-  //   return await this.produtoRepository.buscarPorListaProdutos(listaProdutosId);
-  // }
+  async buscarProdutosPorListaProdutos(listaProdutosId: number) {
+    return this.produtoListaProdutoRepository.buscarPorListaProdutos(
+      listaProdutosId,
+    );
+  }
+
+  async buscarUmProdutoListaProduto(id: number) {
+    return this.produtoListaProdutoRepository.buscarUm(id);
+  }
+
+  async editarProdutoLista(
+    id: number,
+    produtoId: number,
+    dadosDto: EditarProdutoListaControllerDto,
+    usuarioId: number,
+  ) {
+    const produtoEncontrado = await this.produtoService.buscarUm(produtoId);
+    let novoIdProduto: undefined | number;
+
+    if (produtoEncontrado) {
+      if (produtoEncontrado.nome !== dadosDto.nome) {
+        const dadosPrCadastrarProduto: CadastrarProdutoControllerDto = {
+          nome: dadosDto.nome,
+          tipoProdutoId: dadosDto.tipoProdutoId,
+          observacao: dadosDto.observacao,
+        };
+        novoIdProduto = await this.produtoService
+          .cadastrar(usuarioId, dadosPrCadastrarProduto)
+          .then((resp) => resp.id);
+      } else {
+        const dadosPrEditarProduto: EditarProdutoControllerDto = {
+          tipoProdutoId: dadosDto.tipoProdutoId,
+          observacao: dadosDto.observacao,
+        };
+        novoIdProduto = produtoId;
+        await this.produtoService.editar(produtoId, dadosPrEditarProduto);
+      }
+    } else {
+      throw new BadRequestException('Produto não encontrado');
+    }
+
+    const dadosParaEditarProdutoListaProduto: EditarProdutoListaProdutoRepositoryDto =
+      {
+        quantidade: dadosDto.quantidade,
+        valor: dadosDto.valor,
+        unidade: dadosDto.unidade,
+        produtoId: novoIdProduto,
+      };
+    return await this.produtoListaProdutoRepository.editar(
+      dadosDto.produtoListaProdutoId,
+      dadosParaEditarProdutoListaProduto,
+    );
+  }
+
   //
   // async buscarUmProduto(id: number) {
   //   return await this.produtoRepository.buscarUm(id);
@@ -111,9 +164,9 @@ export class ListaProdutosService {
   //   return await this.produtoRepository.editar(id, dadoDto);
   // }
   //
-  // async editarValorProduto(id: number, valor: number) {
-  //   return await this.produtoRepository.editarValor(id, valor);
-  // }
+  async editarValorProdutoListaProdutos(id: number, valor: number) {
+    return await this.produtoListaProdutoRepository.editarValor(id, valor);
+  }
 
   async cadastrarTipoProduto(
     usuarioId: number,
