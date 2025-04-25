@@ -5,9 +5,7 @@ import { ResidenciaModule } from './residencia/residencia.module';
 import { ListaProdutosModule } from './lista-produtos/lista-produtos.module';
 import { RotinaModule } from './rotina/rotina.module';
 import { ProdutoModule } from './produto/produto.module';
-import { config } from 'dotenv';
 
-config()
 
 @Module({
   imports: [AutenticacaoModule, UsuarioModule, ResidenciaModule, ListaProdutosModule, RotinaModule, ProdutoModule],

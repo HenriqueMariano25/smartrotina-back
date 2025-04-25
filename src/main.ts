@@ -4,10 +4,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ConflictInterceptor } from './common/errors/interceptors/conflict.interceptor';
 import { DatabaseInterceptor } from './common/errors/interceptors/database.interceptor';
+import * as dotenv from 'dotenv';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
+  dotenv.config();
 
   const config = new DocumentBuilder()
     .setTitle('SmartRotina')
