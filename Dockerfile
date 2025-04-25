@@ -16,9 +16,6 @@ RUN npm run build
 
 FROM node:22-alpine AS production
 
-ARG JWT_SECRET
-ARG DATABASE_URL
-
 WORKDIR /app
 
 COPY package*.json ./

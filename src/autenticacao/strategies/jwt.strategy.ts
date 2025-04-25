@@ -10,8 +10,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
               private readonly configService: ConfigService
   ) {
     const jwtSecret = configService.get<string>('JWT_SECRET')
-    console.log(jwtSecret)
-    console.log(configService)
     if (!jwtSecret) {
       throw new Error('JWT_SECRET is not defined');
     }
