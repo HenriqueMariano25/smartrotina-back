@@ -16,6 +16,9 @@ RUN npm run build
 
 FROM node:22-alpine AS production
 
+ARG JWT_SECRET
+ARG DATABASE_URL
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -23,9 +26,6 @@ COPY package*.json ./
 RUN npm install --only=production && apk add --no-cache openssl
 
 COPY . .
-
-ENV JWT_SECRET=$JWT_SECRET
-ENV DATABASE_URL=$DATABASE_URL
 
 COPY --from=development /app/dist ./dist
 COPY --from=development /app/node_modules/.prisma ./node_modules/.prisma
