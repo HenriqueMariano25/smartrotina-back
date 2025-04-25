@@ -22,6 +22,8 @@ COPY package*.json ./
 
 RUN npm install --only=production && apk add --no-cache openssl
 
+ARG JWT_SECRET
+
 COPY . .
 
 COPY --from=development /app/dist ./dist
