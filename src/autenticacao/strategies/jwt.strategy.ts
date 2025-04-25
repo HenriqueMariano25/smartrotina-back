@@ -12,13 +12,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: autenticacaoService.retornaExtrairJwt() as JwtFromRequestFunction,
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET') as string,
+      // secretOrKey: configService.get<string>('JWT_SECRET') as string,
+      secretOrKey: process.env.JWT_SECRET || configService.get<string>('JWT_SECRET') as string,
     });
 
     if (!configService.get<string>('JWT_SECRET')) {
       throw new Error('JWT_SECRET is not defined');
     }
-
   }
 
   async validate(jwtPayload: any) {
