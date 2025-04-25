@@ -31,4 +31,7 @@ COPY --from=development /app/prisma ./prisma
 
 EXPOSE 3000
 
-CMD ["npm", "run","start:prod"]
+COPY entrypoint.sh ./
+RUN chmod +x entrypoint.sh
+
+CMD ["./entrypoint.sh"]
