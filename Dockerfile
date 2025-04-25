@@ -1,5 +1,10 @@
 FROM node:22-alpine AS development
 
+ARG RAILWAY_ENVIRONMENT
+
+RUN echo $RAILWAY_SERVICE_NAME
+RUN echo $RAILWAY_ENVIRONMENT
+
 USER root
 
 WORKDIR /app
@@ -15,11 +20,6 @@ RUN npx prisma generate
 RUN npm run build
 
 FROM node:22-alpine AS production
-
-ARG RAILWAY_ENVIRONMENT
-
-RUN echo $RAILWAY_SERVICE_NAME
-RUN echo $RAILWAY_ENVIRONMENT
 
 WORKDIR /app
 

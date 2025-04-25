@@ -27,9 +27,6 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ConflictInterceptor());
   app.useGlobalInterceptors(new DatabaseInterceptor());
 
-  console.log('NODE_ENV:', process.env.NODE_ENV);
-  console.log('JWT_SECRET:', process.env.JWT_SECRET);
-
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
