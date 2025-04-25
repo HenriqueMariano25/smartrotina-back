@@ -9,8 +9,13 @@ import {ConfigModule} from '@nestjs/config';
 
 
 @Module({
-  imports: [AutenticacaoModule, UsuarioModule, ResidenciaModule, ListaProdutosModule, RotinaModule, ProdutoModule,
-    ConfigModule.forRoot({isGlobal: true, envFilePath: '.env', ignoreEnvFile: process.env.NODE_ENV === 'production',}),
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
+    }),
+    AutenticacaoModule, UsuarioModule, ResidenciaModule, ListaProdutosModule, RotinaModule, ProdutoModule,
   ],
   controllers: [],
   providers: [],
