@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
-import {Strategy} from 'passport-jwt';
+import {JwtFromRequestFunction, Strategy} from 'passport-jwt';
 import {AutenticacaoService} from '../autenticacao.service';
 import {ConfigService} from "@nestjs/config";
 
@@ -9,16 +9,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly autenticacaoService: AutenticacaoService,
               private readonly configService: ConfigService
   ) {
-    const jwtSecret = configService.get<string>('JWT_SECRET')
-    if (!jwtSecret) {
+    super({
+      jwtFromRequest: autenticacaoService.retornaExtrairJwt() as JwtFromRequestFunction,
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>('JWT_SECRET') as string,
+    });
+
+    if (!configService.get<string>('JWT_SECRET')) {
       throw new Error('JWT_SECRET is not defined');
     }
 
-    super({
-      jwtFromRequest: autenticacaoService.retornaExtrairJwt(),
-      ignoreExpiration: false,
-      secretOrKey: jwtSecret,
-    });
   }
 
   async validate(jwtPayload: any) {
@@ -27,3 +27,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return usuario;
   }
 }
+
+
+
