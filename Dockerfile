@@ -22,8 +22,6 @@ COPY package*.json ./
 
 RUN npm install --only=production && apk add --no-cache openssl
 
-RUN npm install dotenv
-
 COPY . .
 
 COPY --from=development /app/dist ./dist

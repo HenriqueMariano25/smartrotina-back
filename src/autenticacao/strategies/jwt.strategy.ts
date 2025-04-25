@@ -13,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: autenticacaoService.retornaExtrairJwt() as JwtFromRequestFunction,
       ignoreExpiration: false,
       // secretOrKey: configService.get<string>('JWT_SECRET') as string,
-      secretOrKey: process.env.JWT_SECRET || configService.get<string>('JWT_SECRET') as string,
+      secretOrKey: configService.get<string>('JWT_SECRET') as string || 'teste',
     });
 
     if (!configService.get<string>('JWT_SECRET')) {
