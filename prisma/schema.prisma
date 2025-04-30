@@ -1,5 +1,3 @@
-//npx prisma migrate dev --name init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,15 +15,17 @@ model usuario {
   criadoEm                 DateTime           @default(now())
   editadoEm                DateTime           @default(now())
   deletadoEm               DateTime?
-  usuarioPermissao         usuarioPermissao[]
-  residencia               residencia[]
-  morador                  morador[]
-  tipoProduto              tipoProduto[]
-  produto                  produto[]
-  listaProdutosUsuario     listaProdutos[]    @relation("listaProdutos_usuario")
   listaProdutosResponsavel listaProdutos[]    @relation("listaProdutos_responsavel")
+  listaProdutosUsuario     listaProdutos[]    @relation("listaProdutos_usuario")
+  morador                  morador[]
+  produto                  produto[]
+  residencia               residencia[]
   rotinaResponsavel        rotina[]           @relation("rotina_responsavel")
   rotinaUsuario            rotina[]           @relation("rotina_usuario")
+  tipoProduto              tipoProduto[]
+  usuarioPermissao         usuarioPermissao[]
+  produtoComprado          produtoComprado[]
+  mercado                  mercado[]
 }
 
 model permissao {
@@ -39,8 +39,8 @@ model usuarioPermissao {
   id          Int       @id @default(autoincrement())
   usuarioId   Int
   permissaoId Int
-  usuario     usuario   @relation(fields: [usuarioId], references: [id])
   permissao   permissao @relation(fields: [permissaoId], references: [id])
+  usuario     usuario   @relation(fields: [usuarioId], references: [id])
 }
 
 model residencia {
@@ -51,9 +51,9 @@ model residencia {
   editadoEm     DateTime        @default(now())
   deletadoEm    DateTime?
   usuarioId     Int
-  usuario       usuario         @relation(fields: [usuarioId], references: [id])
-  morador       morador[]
   listaProdutos listaProdutos[]
+  morador       morador[]
+  usuario       usuario         @relation(fields: [usuarioId], references: [id])
   rotina        rotina[]
 }
 
@@ -75,8 +75,8 @@ model listaProdutos {
   nome                String
   observacao          String?
   residenciaId        Int?
-  responsavelId       Int?
   usuarioId           Int
+  responsavelId       Int?
   residencia          residencia?           @relation(fields: [residenciaId], references: [id])
   responsavel         usuario?              @relation("listaProdutos_responsavel", fields: [responsavelId], references: [id])
   usuario             usuario               @relation("listaProdutos_usuario", fields: [usuarioId], references: [id])
@@ -87,19 +87,19 @@ model tipoProduto {
   id        Int       @id @default(autoincrement())
   descricao String
   usuarioId Int
-  usuario   usuario   @relation(fields: [usuarioId], references: [id])
   produto   produto[]
+  usuario   usuario   @relation(fields: [usuarioId], references: [id])
 }
 
 model produto {
   id                  Int                   @id @default(autoincrement())
   nome                String
-  observacao          String?
   tipoProdutoId       Int?
   usuarioId           Int
-  tipoProduto         tipoProduto?          @relation(fields: [tipoProdutoId], references: [id], onDelete: SetNull)
-  usuario             usuario               @relation(fields: [usuarioId], references: [id])
+  observacao          String?
   criadoEm            DateTime              @default(now())
+  tipoProduto         tipoProduto?          @relation(fields: [tipoProdutoId], references: [id])
+  usuario             usuario               @relation(fields: [usuarioId], references: [id])
   produtoListaProduto produtoListaProduto[]
 }
 
@@ -115,35 +115,55 @@ model produtoListaProduto {
   unidade              String
   valor                Float?
   produtoId            Int
-  listaProdutosId      Int?
+  listaProdutosId      Int
   statusProdutoListaId Int
-  statusProdutoLista   statusProdutoLista @relation(fields: [statusProdutoListaId], references: [id])
+  listaProduto         listaProdutos      @relation(fields: [listaProdutosId], references: [id])
   produto              produto            @relation(fields: [produtoId], references: [id])
-  listaProduto         listaProdutos?     @relation(fields: [listaProdutosId], references: [id])
+  statusProdutoLista   statusProdutoLista @relation(fields: [statusProdutoListaId], references: [id])
+  produtoComprado      produtoComprado[]
 }
 
 model rotina {
   id            Int         @id @default(autoincrement())
   nome          String
   dataInicio    String
-  dataTermino   String?
-  horaInicio    String?
-  horaTermino   String?
   repeticao     String?
-  intervalo     Int?
-  periodo       String[]
-  observacao    String?
   criadoEm      DateTime    @default(now())
   editadoEm     DateTime    @updatedAt
   deletadoEm    DateTime?
   responsavelId Int?
   residenciaId  Int?
   usuarioId     Int
-  responsavel   usuario?    @relation("rotina_responsavel", fields: [responsavelId], references: [id])
+  dataTermino   String?
+  intervalo     Int?
+  periodo       String[]
+  horaInicio    String?
+  horaTermino   String?
+  observacao    String?
   residencia    residencia? @relation(fields: [residenciaId], references: [id])
+  responsavel   usuario?    @relation("rotina_responsavel", fields: [responsavelId], references: [id])
   usuario       usuario     @relation("rotina_usuario", fields: [usuarioId], references: [id])
 }
 
-// model statusProdutoListaProduto {
-//
-// }
+model mercado {
+  id              Int               @id @default(autoincrement())
+  nome            String
+  observacao      String?
+  usuarioId       Int
+  criadoEm        DateTime          @default(now())
+  editadoEm       DateTime          @default(now()) @updatedAt
+  deletadoEm      DateTime?
+  produtoComprado produtoComprado[]
+  usuario         usuario           @relation(fields: [usuarioId], references: [id])
+}
+
+model produtoComprado {
+  id                    Int                 @id @default(autoincrement())
+  produtoListaProdutoId Int
+  mercadoId             Int
+  usuarioId             Int
+  dataCompra            DateTime
+  produtoListaProduto   produtoListaProduto @relation(fields: [produtoListaProdutoId], references: [id])
+  mercado               mercado             @relation(fields: [mercadoId], references: [id])
+  usuario               usuario             @relation(fields: [usuarioId], references: [id])
+}
