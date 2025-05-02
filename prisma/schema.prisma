@@ -24,8 +24,8 @@ model usuario {
   rotinaUsuario            rotina[]           @relation("rotina_usuario")
   tipoProduto              tipoProduto[]
   usuarioPermissao         usuarioPermissao[]
-  produtoComprado          produtoComprado[]
   mercado                  mercado[]
+  compra                   compra[]
 }
 
 model permissao {
@@ -109,6 +109,41 @@ model statusProdutoLista {
   produtoListaProduto produtoListaProduto[]
 }
 
+model mercado {
+  id         Int       @id @default(autoincrement())
+  nome       String
+  observacao String?
+  usuarioId  Int
+  criadoEm   DateTime  @default(now())
+  editadoEm  DateTime  @default(now()) @updatedAt
+  deletadoEm DateTime?
+  usuario    usuario   @relation(fields: [usuarioId], references: [id])
+  compra     compra[]
+}
+
+model formaPagamento {
+  id        Int      @id @default(autoincrement())
+  descricao String
+  compra    compra[]
+}
+
+model compra {
+  id                  Int                   @id @default(autoincrement())
+  observacao          String?
+  formaPagamentoId    Int
+  mercadoId           Int
+  usuarioId           Int
+  compradoEm          DateTime
+  criadoEm            DateTime              @default(now())
+  editadoEm           DateTime              @default(now()) @updatedAt
+  deletadoEm          DateTime?
+  valor               Float
+  formaPagamento      formaPagamento        @relation(fields: [formaPagamentoId], references: [id])
+  mercado             mercado               @relation(fields: [mercadoId], references: [id])
+  usuario             usuario               @relation(fields: [usuarioId], references: [id])
+  produtoListaProduto produtoListaProduto[]
+}
+
 model produtoListaProduto {
   id                   Int                @id @default(autoincrement())
   quantidade           Int
@@ -117,10 +152,11 @@ model produtoListaProduto {
   produtoId            Int
   listaProdutosId      Int
   statusProdutoListaId Int
+  compraId             Int?
   listaProduto         listaProdutos      @relation(fields: [listaProdutosId], references: [id])
   produto              produto            @relation(fields: [produtoId], references: [id])
   statusProdutoLista   statusProdutoLista @relation(fields: [statusProdutoListaId], references: [id])
-  produtoComprado      produtoComprado[]
+  compra               compra?             @relation(fields: [compraId], references: [id])
 }
 
 model rotina {
@@ -145,25 +181,6 @@ model rotina {
   usuario       usuario     @relation("rotina_usuario", fields: [usuarioId], references: [id])
 }
 
-model mercado {
-  id              Int               @id @default(autoincrement())
-  nome            String
-  observacao      String?
-  usuarioId       Int
-  criadoEm        DateTime          @default(now())
-  editadoEm       DateTime          @default(now()) @updatedAt
-  deletadoEm      DateTime?
-  produtoComprado produtoComprado[]
-  usuario         usuario           @relation(fields: [usuarioId], references: [id])
-}
 
-model produtoComprado {
-  id                    Int                 @id @default(autoincrement())
-  produtoListaProdutoId Int
-  mercadoId             Int
-  usuarioId             Int
-  dataCompra            DateTime
-  produtoListaProduto   produtoListaProduto @relation(fields: [produtoListaProdutoId], references: [id])
-  mercado               mercado             @relation(fields: [mercadoId], references: [id])
-  usuario               usuario             @relation(fields: [usuarioId], references: [id])
-}
+
+

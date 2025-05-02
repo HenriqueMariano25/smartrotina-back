@@ -17,5 +17,6 @@ import { ProdutoListaProdutoRepository } from './repositories/produtoListaProdut
     TipoProdutoRepository,
     ProdutoListaProdutoRepository,
   ],
+  exports: [ListaProdutosService],
 })
 export class ListaProdutosModule {}

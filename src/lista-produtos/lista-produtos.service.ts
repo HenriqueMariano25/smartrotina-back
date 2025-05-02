@@ -17,6 +17,7 @@ import { AdicionarProdutoListaControllerDto } from './dto/controller/adicionar-p
 import { EditarProdutoListaControllerDto } from './dto/controller/editar-produto-lista.controller.dto';
 import { EditarProdutoControllerDto } from '../produto/dto/controller/editar-produto.controller.dto';
 import { EditarProdutoListaProdutoRepositoryDto } from './dto/repository/editar-produto-lista-produto.repository.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ListaProdutosService {
@@ -175,6 +176,18 @@ export class ListaProdutosService {
     return await this.produtoListaProdutoRepository.editarStatus(
       id,
       statusProdutoListaId,
+    );
+  }
+
+  async comprarProdutoListaProdutoComTransacao(
+    id: number,
+    compraId: number,
+    transacaoCtx: Prisma.TransactionClient,
+  ) {
+    return await this.produtoListaProdutoRepository.comprarComTransacao(
+      id,
+      compraId,
+      transacaoCtx,
     );
   }
 

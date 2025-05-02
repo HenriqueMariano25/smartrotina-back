@@ -7,6 +7,7 @@ import {RotinaModule} from './rotina/rotina.module';
 import {ProdutoModule} from './produto/produto.module';
 import {ConfigModule} from '@nestjs/config';
 import { MercadoModule } from './mercado/mercado.module';
+import { CompraModule } from './compra/compra.module';
 
 
 @Module({
@@ -16,7 +17,7 @@ import { MercadoModule } from './mercado/mercado.module';
       envFilePath: '.env',
       ignoreEnvFile: process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET
     }),
-    AutenticacaoModule, UsuarioModule, ResidenciaModule, ListaProdutosModule, RotinaModule, ProdutoModule, MercadoModule,
+    AutenticacaoModule, UsuarioModule, ResidenciaModule, ListaProdutosModule, RotinaModule, ProdutoModule, MercadoModule, CompraModule,
   ],
   controllers: [],
   providers: [],

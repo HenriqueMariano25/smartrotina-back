@@ -3,6 +3,7 @@ import { PrismaService } from '../../config/prisma/prisma.service';
 import { CadastrarProdutoListaProdutoRepositoryDto } from '../dto/repository/cadastrar-produto-lista-produto.repository.dto';
 import { EStatusProdutoLista } from '../../common/enums/statusProdutoLista';
 import { EditarProdutoListaProdutoRepositoryDto } from '../dto/repository/editar-produto-lista-produto.repository.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ProdutoListaProdutoRepository {
@@ -58,6 +59,17 @@ export class ProdutoListaProdutoRepository {
     return this.prisma.produtoListaProduto.update({
       where: { id },
       data: { statusProdutoListaId },
+    });
+  }
+
+  async comprarComTransacao(
+    id: number,
+    compraId: number,
+    transacaoCtx: Prisma.TransactionClient,
+  ) {
+    return transacaoCtx.produtoListaProduto.update({
+      where: { id },
+      data: { compraId, statusProdutoListaId: 3 },
     });
   }
 }
