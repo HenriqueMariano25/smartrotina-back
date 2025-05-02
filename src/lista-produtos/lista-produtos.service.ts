@@ -168,6 +168,16 @@ export class ListaProdutosService {
     return await this.produtoListaProdutoRepository.editarValor(id, valor);
   }
 
+  async editarStatusProdutoListaProdutos(
+    id: number,
+    statusProdutoListaId: number,
+  ) {
+    return await this.produtoListaProdutoRepository.editarStatus(
+      id,
+      statusProdutoListaId,
+    );
+  }
+
   async cadastrarTipoProduto(
     usuarioId: number,
     dadosDto: CadastrarTipoProdutoControllerDto,

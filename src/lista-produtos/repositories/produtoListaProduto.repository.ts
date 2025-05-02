@@ -53,4 +53,11 @@ export class ProdutoListaProdutoRepository {
       data: { valor },
     });
   }
+
+  async editarStatus(id: number, statusProdutoListaId: number) {
+    return this.prisma.produtoListaProduto.update({
+      where: { id },
+      data: { statusProdutoListaId },
+    });
+  }
 }

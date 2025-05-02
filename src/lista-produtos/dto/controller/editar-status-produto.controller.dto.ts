@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class AtualizarStatusProdutoControllerDto{
+export class EditarStatusProdutoControllerDto {
   @IsNumber()
   @IsNotEmpty()
-  statusId: number
+  statusProdutoListaId: number;
 }
