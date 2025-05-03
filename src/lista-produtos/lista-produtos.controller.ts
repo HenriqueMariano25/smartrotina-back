@@ -55,7 +55,7 @@ export class ListaProdutosController {
     return await this.listaProdutosService.editar(params.id, dadosDto);
   }
 
-  @Post(':id/produto/adicionar')
+  @Post(':id/produto')
   async adicionarProduto(
     @Req() { user: usuario }: UserRequestDto,
     @Param() params: ParamsDto,

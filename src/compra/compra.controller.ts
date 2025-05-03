@@ -19,6 +19,11 @@ export class CompraController {
     return this.compraService.cadastrar(usuario.id, dadosDto);
   }
 
+  @Get('usuario')
+  async buscarPorUsuario(@Req() { user: usuario }: UserRequestDto) {
+    return this.compraService.buscarPorUsuario(usuario.id);
+  }
+
   @Get('formas-pagamento')
   async buscarTodosFormaPagamento() {
     return this.compraService.buscarTodosFormaPagamento();

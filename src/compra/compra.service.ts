@@ -39,6 +39,10 @@ export class CompraService {
     });
   }
 
+  async buscarPorUsuario(usuarioId: number) {
+    return this.compraRepository.buscarPorUsuario(usuarioId);
+  }
+
   async buscarTodosFormaPagamento() {
     return this.formaPagmentoRepository.buscarTodos();
   }

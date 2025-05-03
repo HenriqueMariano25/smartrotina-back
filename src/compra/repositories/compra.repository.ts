@@ -28,6 +28,12 @@ export class CompraRepository {
   }
 
   async buscarPorUsuario(usuarioId: number) {
-    return this.prisma.compra.findMany({ where: { usuarioId } });
+    return this.prisma.compra.findMany({
+      where: { usuarioId },
+      include: {
+        mercado: { select: { id: true, nome: true } },
+        formaPagamento: { select: { id: true, descricao: true } },
+      },
+    });
   }
 }
