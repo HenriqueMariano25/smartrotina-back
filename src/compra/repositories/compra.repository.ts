@@ -36,4 +36,22 @@ export class CompraRepository {
       },
     });
   }
+
+  async buscarComprasPorMes(
+    dataInicio: string,
+    dataFim: string,
+    usuarioId: number,
+  ) {
+    return this.prisma.compra.findMany({
+      where: {
+        usuarioId,
+        compradoEm: { gte: new Date(dataInicio), lte: dataFim },
+      },
+      include: {
+        formaPagamento: {
+          select: { id: true, descricao: true },
+        },
+      },
+    });
+  }
 }
