@@ -15,6 +15,9 @@ model usuario {
   criadoEm                 DateTime           @default(now())
   editadoEm                DateTime           @default(now())
   deletadoEm               DateTime?
+  ultimoLogin              DateTime?
+  bloqueadoEm              DateTime?
+  administrador            Boolean?           @default(false)
   listaProdutosResponsavel listaProdutos[]    @relation("listaProdutos_responsavel")
   listaProdutosUsuario     listaProdutos[]    @relation("listaProdutos_usuario")
   morador                  morador[]
@@ -156,7 +159,7 @@ model produtoListaProduto {
   listaProduto         listaProdutos      @relation(fields: [listaProdutosId], references: [id])
   produto              produto            @relation(fields: [produtoId], references: [id])
   statusProdutoLista   statusProdutoLista @relation(fields: [statusProdutoListaId], references: [id])
-  compra               compra?             @relation(fields: [compraId], references: [id])
+  compra               compra?            @relation(fields: [compraId], references: [id])
 }
 
 model rotina {
@@ -180,7 +183,3 @@ model rotina {
   responsavel   usuario?    @relation("rotina_responsavel", fields: [responsavelId], references: [id])
   usuario       usuario     @relation("rotina_usuario", fields: [usuarioId], references: [id])
 }
-
-
-
-

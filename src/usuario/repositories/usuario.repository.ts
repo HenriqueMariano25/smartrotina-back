@@ -27,6 +27,45 @@ export class UsuarioRepository {
         email: true,
         criadoEm: true,
         editadoEm: true,
+        ultimoLogin: true,
+        bloqueadoEm: true,
+        administrador: true,
+      },
+    });
+  }
+
+  async editarUltimoLogin(id: number) {
+    return this.prisma.usuario.update({
+      where: { id },
+      data: {
+        ultimoLogin: new Date(),
+      },
+    });
+  }
+
+  async bloquear(id: number) {
+    return this.prisma.usuario.update({
+      where: { id },
+      data: {
+        bloqueadoEm: new Date(),
+      },
+    });
+  }
+
+  async desbloquear(id: number) {
+    return this.prisma.usuario.update({
+      where: { id },
+      data: {
+        bloqueadoEm: null,
+      },
+    });
+  }
+
+  async editarAdministrador(id: number, administrador: boolean) {
+    return this.prisma.usuario.update({
+      where: { id },
+      data: {
+        administrador,
       },
     });
   }

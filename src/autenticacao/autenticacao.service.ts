@@ -48,6 +48,12 @@ export class AutenticacaoService {
       throw new BadRequestException('Usuário ou senha incorreta');
     }
 
+    if (usuario.bloqueadoEm) {
+      throw new BadRequestException(
+        'Usuário bloqueado, procure o administrador do Sistema',
+      );
+    }
+
     const senhaCorreta = await this.compararSenha(
       loginDto.senha,
       usuario.senha,
@@ -58,6 +64,8 @@ export class AutenticacaoService {
     }
 
     const token = this.gerarToken(usuario.id);
+
+    await this.usuarioService.editarUltimoLogin(usuario.id);
 
     return { usuario: _.omit(usuario, ['senha']), token };
   }
